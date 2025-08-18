@@ -9,6 +9,10 @@ val libs = the<LibrariesForLibs>()
 dependencies {
   implementation(libs.result4k)
   implementation(libs.http4k.config)
+  implementation(libs.kafka.clients)
+  implementation(libs.kafka.streams)
+  implementation(libs.kafka.connect.json)
+  implementation(libs.slf4j.simple)
 
   testImplementation(libs.kotlin.test)
   testImplementation(libs.kotest.assertions)

@@ -1,4 +1,24 @@
 package pl.sudneu.pipelineunits.config
 
-class PipelineUnitsEnvironment {
+import org.apache.kafka.clients.consumer.ConsumerConfig
+import org.http4k.config.Environment
+import org.http4k.config.EnvironmentKey
+import org.http4k.lens.csv
+import org.http4k.lens.nonBlankString
+import org.http4k.lens.of
+import pl.sudneu.pipelineunits.config.PipelineUnitsEnvironment.KAFKA_BOOTSTRAP_SERVERS
+import pl.sudneu.pipelineunits.config.PipelineUnitsEnvironment.KAFKA_GROUP_ID
+import java.util.Properties
+
+object PipelineUnitsEnvironment {
+  val KAFKA_BOOTSTRAP_SERVERS by EnvironmentKey.csv(",").of().required()
+  val KAFKA_GROUP_ID by EnvironmentKey.nonBlankString().of().required()
+  val KAFKA_TOPIC_IN by EnvironmentKey.nonBlankString().of().required()
+  val KAFKA_TOPIC_OUT by EnvironmentKey.nonBlankString().of().required()
 }
+
+fun Environment.toProperties() =
+  Properties().also { props ->
+    props[ConsumerConfig.GROUP_ID_CONFIG] = this[KAFKA_GROUP_ID]
+    props[ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG] = this[KAFKA_BOOTSTRAP_SERVERS]
+  }
