@@ -21,6 +21,7 @@ dependencies {
   testImplementation(libs.junit.jupiter.params)
   testImplementation(libs.fabrikate4k)
   testImplementation(libs.mockk)
+  testImplementation(libs.kafka.streams.test)
 }
 
 val jvmVersion: String by project
