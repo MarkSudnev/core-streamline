@@ -15,7 +15,7 @@ import pl.sudneu.pipelineunits.config.toProperties
 fun main(args: Array<String>) {
   val environment = Environment.ENV overrides localEnvironment
   val kafkaStream = KafkaStreams(
-    PipelineTopology(environment),
+    AlphaTopology(environment),
     environment.toProperties()
   )
   kafkaStream.start()
@@ -24,7 +24,7 @@ fun main(args: Array<String>) {
     .addShutdownHook(Thread { kafkaStream.close() })
 }
 
-fun PipelineTopology(env: Environment): Topology =
+fun AlphaTopology(env: Environment): Topology =
   StreamsBuilder().apply {
     stream(env[KAFKA_TOPIC_IN], Consumed.with(Serdes.String(), Serdes.String()))
       .process(ProcessorSupplier { AlphaProcessor() })
