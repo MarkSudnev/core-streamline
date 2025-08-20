@@ -6,11 +6,11 @@ import org.http4k.config.EnvironmentKey
 import org.http4k.lens.csv
 import org.http4k.lens.nonBlankString
 import org.http4k.lens.of
-import pl.sudneu.pipelineunits.config.PipelineUnitsEnvironment.KAFKA_BOOTSTRAP_SERVERS
-import pl.sudneu.pipelineunits.config.PipelineUnitsEnvironment.KAFKA_GROUP_ID
+import pl.sudneu.pipelineunits.config.PipelineConfig.KAFKA_BOOTSTRAP_SERVERS
+import pl.sudneu.pipelineunits.config.PipelineConfig.KAFKA_GROUP_ID
 import java.util.Properties
 
-object PipelineUnitsEnvironment {
+object PipelineConfig {
   val KAFKA_BOOTSTRAP_SERVERS by EnvironmentKey.csv(",").of().required()
   val KAFKA_GROUP_ID by EnvironmentKey.nonBlankString().of().required()
   val KAFKA_TOPIC_IN by EnvironmentKey.nonBlankString().of().required()

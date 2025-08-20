@@ -3,11 +3,11 @@ package pl.sudneu.pipelineunits.config
 import io.kotest.matchers.shouldBe
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.junit.jupiter.api.Test
-import pl.sudneu.pipelineunits.config.PipelineUnitsEnvironment.KAFKA_BOOTSTRAP_SERVERS
-import pl.sudneu.pipelineunits.config.PipelineUnitsEnvironment.KAFKA_GROUP_ID
+import pl.sudneu.pipelineunits.config.PipelineConfig.KAFKA_BOOTSTRAP_SERVERS
+import pl.sudneu.pipelineunits.config.PipelineConfig.KAFKA_GROUP_ID
 import java.util.*
 
-class PipelineUnitsEnvironmentShould {
+class PipelineConfigShould {
 
   @Test
   fun `be converted to properties`() {

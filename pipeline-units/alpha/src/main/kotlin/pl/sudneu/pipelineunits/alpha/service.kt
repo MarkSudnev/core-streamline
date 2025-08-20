@@ -8,8 +8,8 @@ import org.apache.kafka.streams.kstream.Consumed
 import org.apache.kafka.streams.kstream.Produced
 import org.apache.kafka.streams.processor.api.ProcessorSupplier
 import org.http4k.config.Environment
-import pl.sudneu.pipelineunits.config.PipelineUnitsEnvironment.KAFKA_TOPIC_IN
-import pl.sudneu.pipelineunits.config.PipelineUnitsEnvironment.KAFKA_TOPIC_OUT
+import pl.sudneu.pipelineunits.config.PipelineConfig.KAFKA_TOPIC_IN
+import pl.sudneu.pipelineunits.config.PipelineConfig.KAFKA_TOPIC_OUT
 import pl.sudneu.pipelineunits.config.toProperties
 
 fun main(args: Array<String>) {

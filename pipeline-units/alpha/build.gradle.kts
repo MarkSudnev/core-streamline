@@ -8,5 +8,5 @@ dependencies {
 }
 
 application {
-  mainClass = "pl.sudneu.pipelineunits.ServiceKt"
+  mainClass = "pl.sudneu.pipelineunits.alpha.ServiceKt"
 }
