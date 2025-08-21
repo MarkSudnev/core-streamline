@@ -3,13 +3,11 @@ package pl.sudneu.pipelineunits.alpha
 import org.apache.kafka.streams.processor.api.Processor
 import org.apache.kafka.streams.processor.api.ProcessorContext
 import org.apache.kafka.streams.processor.api.Record
-import java.time.LocalDateTime
+import pl.sudneu.pipelineunits.shared.TimeProvider
 import java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME
 
-typealias TimeProvider = () -> LocalDateTime
-
 class AlphaProcessor(
-  private val timeProvider: TimeProvider = { LocalDateTime.now() }
+  private val timeProvider: TimeProvider = TimeProvider.Default
 ): Processor<String, String, String, String> {
 
   private lateinit var context: ProcessorContext<String, String>

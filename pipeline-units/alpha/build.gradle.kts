@@ -5,6 +5,7 @@ plugins {
 
 dependencies {
   implementation(project(":config"))
+  implementation(project(":shared"))
 }
 
 application {

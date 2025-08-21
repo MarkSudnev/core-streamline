@@ -7,12 +7,13 @@ import org.apache.kafka.streams.processor.api.MockProcessorContext
 import org.apache.kafka.streams.processor.api.Record
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
+import pl.sudneu.pipelineunits.shared.TimeProvider
 import java.time.LocalDateTime
 
 class AlphaProcessorShould {
 
   private val context = MockProcessorContext<String, String>()
-  private val timeProvider: TimeProvider = { LocalDateTime.parse("2025-01-01T09:00:00") }
+  private val timeProvider = TimeProvider { LocalDateTime.parse("2025-01-01T09:00:00") }
 
   @AfterEach
   fun teardown() {
