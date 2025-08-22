@@ -17,3 +17,51 @@ services:
       KAFKA_NUM_PARTITIONS: 3
     ports:
       - "29092:29092"
+    healthcheck:
+      test: /opt/kafka/bin/kafka-cluster.sh cluster-id --bootstrap-server kafka:9092 || exit 1
+      interval: 1s
+      timeout: 60s
+      retries: 60
+
+  kafka-init:
+    image: apache/kafka:3.9.1
+    container_name: kafka-init
+    depends_on:
+      kafka: 
+        condition: service_healthy
+    entrypoint: [ "/bin/sh", "-c" ]
+    command: |
+      "
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server=kafka:9092 --list
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server=kafka:9092 --create --topic first --replication-factor 1 --partitions 1
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server=kafka:9092 --create --topic second --replication-factor 1 --partitions 1
+      /opt/kafka/bin/kafka-topics.sh --bootstrap-server=kafka:9092 --create --topic third --replication-factor 1 --partitions 1
+      "
+
+  alpha-unit:
+    build:
+      dockerfile: docker/alpha.Dockerfile
+      context: pipeline-units
+    container_name: alpha-unit
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka
+      KAFKA_APPLICATION_ID: alpha-unit
+      KAFKA_TOPIC_IN: first
+      KAFKA_TOPIC_OUT: second
+    depends_on:
+      kafka-init:
+        condition: service_completed_successfully
+
+  beta-unit:
+    build:
+      dockerfile: docker/beta.Dockerfile
+      context: pipeline-units
+    container_name: beta-unit
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka
+      KAFKA_APPLICATION_ID: beta-unit
+      KAFKA_TOPIC_IN: second
+      KAFKA_TOPIC_OUT: third
+    depends_on:
+      kafka-init:
+        condition: service_completed_successfully
