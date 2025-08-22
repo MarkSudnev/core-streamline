@@ -1,17 +1,18 @@
 package pl.sudneu.pipelineunits.config
 
-import org.apache.kafka.clients.consumer.ConsumerConfig
+import org.apache.kafka.streams.StreamsConfig
 import org.http4k.config.Environment
 import org.http4k.config.EnvironmentKey
 import org.http4k.lens.csv
 import org.http4k.lens.nonBlankString
 import org.http4k.lens.of
+import pl.sudneu.pipelineunits.config.PipelineConfig.KAFKA_APPLICATION_ID
 import pl.sudneu.pipelineunits.config.PipelineConfig.KAFKA_BOOTSTRAP_SERVERS
-import pl.sudneu.pipelineunits.config.PipelineConfig.KAFKA_GROUP_ID
-import java.util.Properties
+import java.util.*
 
 object PipelineConfig {
   val KAFKA_BOOTSTRAP_SERVERS by EnvironmentKey.csv(",").of().required()
+  val KAFKA_APPLICATION_ID by EnvironmentKey.nonBlankString().of().required()
   val KAFKA_GROUP_ID by EnvironmentKey.nonBlankString().of().required()
   val KAFKA_TOPIC_IN by EnvironmentKey.nonBlankString().of().required()
   val KAFKA_TOPIC_OUT by EnvironmentKey.nonBlankString().of().required()
@@ -19,6 +20,6 @@ object PipelineConfig {
 
 fun Environment.toProperties() =
   Properties().also { props ->
-    props[ConsumerConfig.GROUP_ID_CONFIG] = this[KAFKA_GROUP_ID]
-    props[ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG] = this[KAFKA_BOOTSTRAP_SERVERS]
+    props[StreamsConfig.APPLICATION_ID_CONFIG] = this[KAFKA_APPLICATION_ID]
+    props[StreamsConfig.BOOTSTRAP_SERVERS_CONFIG] = this[KAFKA_BOOTSTRAP_SERVERS]
   }
