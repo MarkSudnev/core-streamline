@@ -13,7 +13,6 @@ import java.util.*
 object PipelineConfig {
   val KAFKA_BOOTSTRAP_SERVERS by EnvironmentKey.csv(",").of().required()
   val KAFKA_APPLICATION_ID by EnvironmentKey.nonBlankString().of().required()
-  val KAFKA_GROUP_ID by EnvironmentKey.nonBlankString().of().required()
   val KAFKA_TOPIC_IN by EnvironmentKey.nonBlankString().of().required()
   val KAFKA_TOPIC_OUT by EnvironmentKey.nonBlankString().of().required()
 }
