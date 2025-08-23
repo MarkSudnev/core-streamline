@@ -65,3 +65,19 @@ services:
     depends_on:
       kafka-init:
         condition: service_completed_successfully
+
+  helper:
+    image: apache/kafka:3.9.1
+    container_name: helper
+    depends_on:
+      kafka-init:
+        condition: service_completed_successfully
+    volumes:
+      - ./utils:/opt/utils
+    entrypoint: [ "/bin/sh", "-c" ]
+    command: |
+      "
+      /opt/kafka/bin/kafka-console-producer.sh --bootstrap-server=kafka:9092 --topic=first < /opt/utils/message.txt
+      "
+
+    
