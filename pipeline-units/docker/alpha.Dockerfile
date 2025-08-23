@@ -1,4 +1,4 @@
-FROM gradle:8.14.3-jdk21-noble
+FROM gradle:8.14.3-jdk21-noble AS build
 
 COPY alpha /opt/app/alpha
 COPY build-logic /opt/app/build-logic
@@ -12,6 +12,13 @@ COPY settings.gradle.kts /opt/app/settings.gradle.kts
 
 WORKDIR /opt/app
 
-RUN gradle build --parallel
+RUN gradle build --parallel :alpha:build :alpha:distTar
 
-ENTRYPOINT ["gradle", "run"]
+FROM eclipse-temurin:21.0.7_6-jre-noble AS app
+
+COPY --from=build /opt/app/alpha/build/distributions/alpha.tar /opt/app/alpha.tar
+
+WORKDIR /opt/app
+RUN tar -xvf alpha.tar && rm alpha.tar
+
+ENTRYPOINT ["/bin/bash", "-c", "/opt/app/alpha/bin/alpha"]

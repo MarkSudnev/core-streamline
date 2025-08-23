@@ -44,7 +44,7 @@ services:
       context: pipeline-units
     container_name: alpha-unit
     environment:
-      KAFKA_BOOTSTRAP_SERVERS: kafka
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       KAFKA_APPLICATION_ID: alpha-unit
       KAFKA_TOPIC_IN: first
       KAFKA_TOPIC_OUT: second
@@ -58,7 +58,7 @@ services:
       context: pipeline-units
     container_name: beta-unit
     environment:
-      KAFKA_BOOTSTRAP_SERVERS: kafka
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       KAFKA_APPLICATION_ID: beta-unit
       KAFKA_TOPIC_IN: second
       KAFKA_TOPIC_OUT: third
