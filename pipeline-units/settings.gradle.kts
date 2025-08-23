@@ -1,6 +1,12 @@
 rootProject.name = "pipeline-units"
 
-include("config", "shared", "alpha", "beta")
+include(
+  "config",
+  "shared",
+  "alpha",
+  "beta",
+  "omega"
+  )
 
 dependencyResolutionManagement {
   repositories {

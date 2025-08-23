@@ -10,6 +10,7 @@ dependencies {
   implementation(libs.result4k)
   implementation(libs.http4k.config)
   implementation(libs.kafka.clients)
+  implementation(libs.kafka.streams)
   implementation(libs.kafka.connect.json)
   implementation(libs.slf4j.simple)
 
@@ -20,6 +21,7 @@ dependencies {
   testImplementation(libs.junit.jupiter.params)
   testImplementation(libs.fabrikate4k)
   testImplementation(libs.mockk)
+  testImplementation(libs.kafka.streams.test)
 }
 
 val jvmVersion: String by project

@@ -1,5 +1,5 @@
 plugins {
-  id("pipeline-units-common-conventions")
+  id("pipeline-stream-units-common-conventions")
 }
 
 dependencies {
