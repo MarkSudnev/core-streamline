@@ -10,13 +10,13 @@ import org.apache.kafka.streams.processor.api.ProcessorSupplier
 import org.http4k.config.Environment
 import pl.sudneu.pipelineunits.config.PipelineConfig.KAFKA_TOPIC_IN
 import pl.sudneu.pipelineunits.config.PipelineConfig.KAFKA_TOPIC_OUT
-import pl.sudneu.pipelineunits.config.toProperties
+import pl.sudneu.pipelineunits.config.toStreamProperties
 
 fun main(args: Array<String>) {
   val environment = Environment.ENV overrides localEnvironment
   val kafkaStream = KafkaStreams(
     BetaTopology(environment),
-    environment.toProperties()
+    environment.toStreamProperties()
   )
   kafkaStream.start()
   Runtime

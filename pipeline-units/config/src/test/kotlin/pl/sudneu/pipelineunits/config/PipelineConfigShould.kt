@@ -11,11 +11,11 @@ class PipelineConfigShould {
 
   @Test
   fun `be converted to properties`() {
-    val properties: Properties = testEnvironment.toProperties()
+    val properties: Properties = testEnvironment.toStreamProperties()
 
     with(properties) {
-      properties[StreamsConfig.APPLICATION_ID_CONFIG] shouldBe testEnvironment[KAFKA_APPLICATION_ID]
-      properties[StreamsConfig.BOOTSTRAP_SERVERS_CONFIG] shouldBe testEnvironment[KAFKA_BOOTSTRAP_SERVERS]
+      this[StreamsConfig.APPLICATION_ID_CONFIG] shouldBe testEnvironment[KAFKA_APPLICATION_ID]
+      this[StreamsConfig.BOOTSTRAP_SERVERS_CONFIG] shouldBe testEnvironment[KAFKA_BOOTSTRAP_SERVERS]
     }
   }
 }

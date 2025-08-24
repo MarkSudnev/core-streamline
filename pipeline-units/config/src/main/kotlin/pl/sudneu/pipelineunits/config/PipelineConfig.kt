@@ -17,7 +17,7 @@ object PipelineConfig {
   val KAFKA_TOPIC_OUT by EnvironmentKey.nonBlankString().of().required()
 }
 
-fun Environment.toProperties() =
+fun Environment.toStreamProperties() =
   Properties().also { props ->
     props[StreamsConfig.APPLICATION_ID_CONFIG] = this[KAFKA_APPLICATION_ID]
     props[StreamsConfig.BOOTSTRAP_SERVERS_CONFIG] = this[KAFKA_BOOTSTRAP_SERVERS]

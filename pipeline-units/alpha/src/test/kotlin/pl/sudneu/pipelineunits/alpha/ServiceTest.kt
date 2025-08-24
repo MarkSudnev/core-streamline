@@ -9,7 +9,7 @@ import org.apache.kafka.streams.test.TestRecord
 import org.junit.jupiter.api.Test
 import pl.sudneu.pipelineunits.config.PipelineConfig.KAFKA_TOPIC_IN
 import pl.sudneu.pipelineunits.config.PipelineConfig.KAFKA_TOPIC_OUT
-import pl.sudneu.pipelineunits.config.toProperties
+import pl.sudneu.pipelineunits.config.toStreamProperties
 
 class ServiceTest {
 
@@ -18,7 +18,7 @@ class ServiceTest {
     val key: String = Fabrikate().random()
     val value: String = Fabrikate().random()
     val topology = AlphaTopology(localEnvironment)
-    val testStream = TopologyTestDriver(topology, localEnvironment.toProperties())
+    val testStream = TopologyTestDriver(topology, localEnvironment.toStreamProperties())
     val inputTopic = testStream.createInputTopic(
       localEnvironment[KAFKA_TOPIC_IN],
       StringSerde().serializer(),
