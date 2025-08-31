@@ -23,20 +23,32 @@ services:
       timeout: 60s
       retries: 60
 
-  kafka-init:
-    image: apache/kafka:3.9.1
-    container_name: kafka-init
+  terraform:
+    image: hashicorp/terraform:1.12.2
+    container_name: terraform
     depends_on:
-      kafka: 
+      kafka:
         condition: service_healthy
+    working_dir: /workspace
+    volumes:
+      - ./terraform:/workspace
     entrypoint: [ "/bin/sh", "-c" ]
-    command: |
-      "
-      /opt/kafka/bin/kafka-topics.sh --bootstrap-server=kafka:9092 --list
-      /opt/kafka/bin/kafka-topics.sh --bootstrap-server=kafka:9092 --create --topic first --replication-factor 1 --partitions 1
-      /opt/kafka/bin/kafka-topics.sh --bootstrap-server=kafka:9092 --create --topic second --replication-factor 1 --partitions 1
-      /opt/kafka/bin/kafka-topics.sh --bootstrap-server=kafka:9092 --create --topic third --replication-factor 1 --partitions 1
-      "
+    command: "terraform init && terraform apply --auto-approve"
+
+  # kafka-init:
+  #   image: apache/kafka:3.9.1
+  #   container_name: kafka-init
+  #   depends_on:
+  #     kafka: 
+  #       condition: service_healthy
+  #   entrypoint: [ "/bin/sh", "-c" ]
+  #   command: |
+  #     "
+  #     /opt/kafka/bin/kafka-topics.sh --bootstrap-server=kafka:9092 --list
+  #     /opt/kafka/bin/kafka-topics.sh --bootstrap-server=kafka:9092 --create --topic first --replication-factor 1 --partitions 1
+  #     /opt/kafka/bin/kafka-topics.sh --bootstrap-server=kafka:9092 --create --topic second --replication-factor 1 --partitions 1
+  #     /opt/kafka/bin/kafka-topics.sh --bootstrap-server=kafka:9092 --create --topic third --replication-factor 1 --partitions 1
+  #     "
 
   alpha-unit:
     build:
@@ -49,7 +61,7 @@ services:
       KAFKA_TOPIC_IN: first
       KAFKA_TOPIC_OUT: second
     depends_on:
-      kafka-init:
+      terraform:
         condition: service_completed_successfully
 
   beta-unit:
@@ -63,28 +75,28 @@ services:
       KAFKA_TOPIC_IN: second
       KAFKA_TOPIC_OUT: third
     depends_on:
-      kafka-init:
+      terraform:
         condition: service_completed_successfully
 
-  helper:
-    image: apache/kafka:3.9.1
-    container_name: helper
-    depends_on:
-      kafka-init:
-        condition: service_completed_successfully
-    volumes:
-      - ./utils:/opt/utils
-    entrypoint: [ "/bin/sh", "-c" ]
-    command: |
-      "
-      /opt/kafka/bin/kafka-console-producer.sh --bootstrap-server=kafka:9092 --topic=first < /opt/utils/message.txt
-      "
+  # helper:
+  #   image: apache/kafka:3.9.1
+  #   container_name: helper
+  #   depends_on:
+  #     kafka-init:
+  #       condition: service_completed_successfully
+  #   volumes:
+  #     - ./utils:/opt/utils
+  #   entrypoint: [ "/bin/sh", "-c" ]
+  #   command: |
+  #     "
+  #     /opt/kafka/bin/kafka-console-producer.sh --bootstrap-server=kafka:9092 --topic=first < /opt/utils/message.txt
+  #     "
 
-  server:
-    image: nginx:1.28.0-alpine3.21
-    container_name: server
-    volumes:
-      - ./utils:/usr/share/nginx/html
-    ports:
-      - "8090:80"
+  # server:
+  #   image: nginx:1.28.0-alpine3.21
+  #   container_name: server
+  #   volumes:
+  #     - ./utils:/usr/share/nginx/html
+  #   ports:
+  #     - "8090:80"
    
