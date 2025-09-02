@@ -1,7 +1,10 @@
 package pl.sudneu.pipelineunits.omega
 
 import dev.forkhandles.result4k.Result
-import dev.forkhandles.result4k.asSuccess
+import dev.forkhandles.result4k.flatMap
+import dev.forkhandles.result4k.map
+import dev.forkhandles.result4k.mapFailure
+import dev.forkhandles.result4k.resultFrom
 import java.io.File
 
 fun interface OmegaProcessor {
@@ -11,13 +14,29 @@ fun interface OmegaProcessor {
   companion object
 }
 
-fun HtmlCollectorProcessor(outputLocation: File, storage: MutableList<String>): OmegaProcessor {
-  return OmegaProcessor { message: String ->
+fun HtmlCollectorProcessor(
+  outputLocation: File,
+  storage: MutableList<String>,
+  templatePath: String = "omega-report.html"
+): OmegaProcessor =
+  OmegaProcessor { message: String ->
     storage.add(message)
-    val template = ClassLoader.getSystemResource("omega-report.html").readText()
     val messages = storage.joinToString("") { "<p>$it</p>" }
-    val report = template.replace("messages-placeholder", messages)
-    outputLocation.writeText(report)
-    Unit.asSuccess()
+    readTemplate(templatePath)
+      .map { template -> template.replace("messages-placeholder", messages) }
+      .flatMap { report -> outputLocation.writeReport(report) }
   }
-}
+
+private fun readTemplate(templatePath: String): Result<String, OmegaError> = resultFrom {
+  ClassLoader.getSystemResource(templatePath).readText()
+}.mapFailure { e -> OmegaError("'$templatePath' is not found") }
+
+private fun File.writeReport(report: String): Result<Unit, OmegaError> = resultFrom {
+  writeText(report)
+}.mapFailure { e -> OmegaError("'${this.absolutePath}' is not accessible") }
+
+
+fun OmegaProcessor.Companion.collectAsHtmlReport(
+  outputLocation: File,
+  storage: MutableList<String>
+) = HtmlCollectorProcessor(outputLocation, storage)

@@ -1,5 +1,6 @@
 package pl.sudneu.pipelineunits.omega
 
+import dev.forkhandles.result4k.kotest.shouldBeFailure
 import dev.forkhandles.result4k.kotest.shouldBeSuccess
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.AfterEach
@@ -11,7 +12,7 @@ import java.nio.file.Path
 
 class HtmlCollectorProcessorShould {
 
-  @TempDir lateinit var outputDirectory: Path
+  @TempDir private lateinit var outputDirectory: Path
   private val outputFile: File
     get() = outputDirectory.resolve("omega-report.html").toFile()
 
@@ -44,6 +45,25 @@ class HtmlCollectorProcessorShould {
     processor.process("Second message").shouldBeSuccess()
 
     outputFile.readText() shouldBe expectedOutput2
+  }
+
+  @Test
+  fun `return failure when template is missing`() {
+    val processor = HtmlCollectorProcessor(
+      outputFile,
+      mutableListOf(),
+      "missing-file.html"
+    )
+    processor.process("Lorem Ipsum") shouldBeFailure OmegaError("'missing-file.html' is not found")
+  }
+
+  @Test
+  fun `return failure when output location is not accessible`() {
+    val processor = HtmlCollectorProcessor(
+      File("/path/to/nowhere"),
+      mutableListOf()
+    )
+    processor.process("Lorem Ipsum") shouldBeFailure OmegaError("'/path/to/nowhere' is not accessible")
   }
 }
 
