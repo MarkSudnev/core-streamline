@@ -7,12 +7,13 @@ import org.http4k.lens.nonBlankString
 import org.http4k.lens.of
 import pl.sudneu.pipelineunits.config.PipelineConfig.KAFKA_BOOTSTRAP_SERVERS
 import pl.sudneu.pipelineunits.omega.OmegaConfig.KAFKA_GROUP_ID
+import java.io.File
 import java.util.*
 
 object OmegaConfig {
   val KAFKA_GROUP_ID by EnvironmentKey.nonBlankString().of().required()
   val KAFKA_TOPIC by EnvironmentKey.nonBlankString().of().required()
-  val OUTPUT_FILE by EnvironmentKey.nonBlankString().of().required()
+  val OUTPUT_FILE by EnvironmentKey.map(::File, File::getAbsolutePath).of().required()
 }
 
 internal fun Environment.toConsumerProperties(): Properties =

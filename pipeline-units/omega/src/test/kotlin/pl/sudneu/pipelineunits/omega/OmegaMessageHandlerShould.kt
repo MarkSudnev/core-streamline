@@ -69,6 +69,16 @@ class OmegaMessageHandlerShould {
     committed.shouldBeEmpty()
   }
 
+  @Test
+  fun `close consumer after shutdown`() {
+    val handler = OmegaMessageHandler(consumer) { Unit.asSuccess() }
+    prepareConsumer()
+    consumer.schedulePollTask { sendMessage() }
+    stopConsumer()
+    handler.listen(topicPartition.topic())
+    consumer.closed() shouldBe true
+  }
+
   private fun sendMessage(message: String = "Lorem Ipsum") {
     consumer.addRecord(
       ConsumerRecord(
