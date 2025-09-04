@@ -33,15 +33,19 @@ class OmegaMessageHandlerShould {
 
   @Test
   fun `call document omega handler`() {
+    val headers = mapOf(
+      "alpha" to "one",
+      "beta" to "two"
+    )
     val sentMessage = "one two three"
     val processor = DummyOmegaProcessor()
     val handler = OmegaMessageHandler(consumer, processor)
     prepareConsumer()
-    consumer.schedulePollTask { sendMessage(sentMessage) }
+    consumer.schedulePollTask { sendMessage(sentMessage, headers) }
     stopConsumer()
     handler.listen(topicPartition.topic())
 
-    processor.receivedMessage shouldBe sentMessage
+    processor.receivedMessage shouldBe "[alpha::one][beta::two] $sentMessage"
   }
 
   @Test
@@ -79,16 +83,21 @@ class OmegaMessageHandlerShould {
     consumer.closed() shouldBe true
   }
 
-  private fun sendMessage(message: String = "Lorem Ipsum") {
-    consumer.addRecord(
-      ConsumerRecord(
-        topicPartition.topic(),
-        topicPartition.partition(),
-        0,
-        "key",
-        message
-      )
+  private fun sendMessage(
+    message: String = "Lorem Ipsum",
+    headers: Map<String, String> = mapOf("one" to "two")
+  ) {
+    val record = ConsumerRecord(
+      topicPartition.topic(),
+      topicPartition.partition(),
+      0,
+      "key",
+      message
     )
+    headers.forEach { key, value ->
+      record.headers().add(key, value.toByteArray())
+    }
+    consumer.addRecord(record)
   }
 
   private fun prepareConsumer() {

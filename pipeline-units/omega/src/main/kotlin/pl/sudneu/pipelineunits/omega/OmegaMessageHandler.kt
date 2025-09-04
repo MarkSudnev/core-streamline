@@ -2,6 +2,7 @@ package pl.sudneu.pipelineunits.omega
 
 import dev.forkhandles.result4k.peek
 import org.apache.kafka.clients.consumer.Consumer
+import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.clients.consumer.ConsumerRecords
 import org.apache.kafka.common.errors.WakeupException
 import java.time.Duration
@@ -32,11 +33,18 @@ class OmegaMessageHandler(
 
   private fun handle(records: ConsumerRecords<String, String>) {
     records
-      .map { record -> record.value() }
+      .map { record -> record.format() }
       .forEach { v -> processor.process(v).peek { consumer.commitSync() } }
   }
 
   private fun stop() {
     consumer.wakeup()
   }
+}
+
+fun ConsumerRecord<String, String>.format(): String {
+  val headers = headers().joinToString("") { header ->
+    "[${header.key()}::${String(header.value())}]"
+  }
+  return "$headers ${value()}"
 }
