@@ -34,7 +34,7 @@ class OmegaMessageHandler(
   private fun handle(records: ConsumerRecords<String, String>) {
     records
       .map { record -> record.format() }
-      .forEach { v -> processor.process(v).peek { consumer.commitSync() } }
+      .forEach { message -> processor.process(message).peek { consumer.commitSync() } }
   }
 
   private fun stop() {
@@ -42,7 +42,7 @@ class OmegaMessageHandler(
   }
 }
 
-fun ConsumerRecord<String, String>.format(): String {
+private fun ConsumerRecord<String, String>.format(): String {
   val headers = headers().joinToString("") { header ->
     "[${header.key()}::${String(header.value())}]"
   }

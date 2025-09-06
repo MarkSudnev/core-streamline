@@ -67,6 +67,7 @@ services:
     build:
       dockerfile: docker/omega.Dockerfile
       context: pipeline-units
+    container_name: omega-unit
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       KAFKA_TOPIC: third

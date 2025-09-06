@@ -35,7 +35,7 @@ class HtmlCollectorProcessorShould {
     val processor = HtmlCollectorProcessor(outputFile, mutableListOf())
     processor.process("Lorem Ipsum").shouldBeSuccess()
 
-    outputFile.readText() shouldBe expectedOutput1
+    outputFile.readText() shouldBe expectedSingleMessageOutput
   }
 
   @Test
@@ -44,7 +44,7 @@ class HtmlCollectorProcessorShould {
     processor.process("First message").shouldBeSuccess()
     processor.process("Second message").shouldBeSuccess()
 
-    outputFile.readText() shouldBe expectedOutput2
+    outputFile.readText() shouldBe expectedMultiMessageOutput
   }
 
   @Test
@@ -67,7 +67,7 @@ class HtmlCollectorProcessorShould {
   }
 }
 
-private val expectedOutput1 = """
+private val expectedSingleMessageOutput = """
   <!DOCTYPE html>
   <html lang="en">
   <head>
@@ -86,7 +86,7 @@ private val expectedOutput1 = """
   
   """.trimIndent()
 
-private val expectedOutput2 = """
+private val expectedMultiMessageOutput = """
   <!DOCTYPE html>
   <html lang="en">
   <head>
