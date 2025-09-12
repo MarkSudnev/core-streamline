@@ -2,7 +2,11 @@ package pl.sudneu.pipelineunits.omega
 
 import dev.forkhandles.result4k.kotest.shouldBeFailure
 import dev.forkhandles.result4k.kotest.shouldBeSuccess
+import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldEndWith
+import io.kotest.matchers.string.shouldMatch
+import io.kotest.matchers.types.shouldBeInstanceOf
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -35,7 +39,7 @@ class HtmlCollectorProcessorShould {
     val processor = HtmlCollectorProcessor(outputFile, mutableListOf())
     processor.process("Lorem Ipsum").shouldBeSuccess()
 
-    outputFile.readText() shouldBe expectedSingleMessageOutput
+    outputFile.readText().removeLineEndings() shouldBe expectedSingleMessageOutput
   }
 
   @Test
@@ -44,7 +48,7 @@ class HtmlCollectorProcessorShould {
     processor.process("First message").shouldBeSuccess()
     processor.process("Second message").shouldBeSuccess()
 
-    outputFile.readText() shouldBe expectedMultiMessageOutput
+    outputFile.readText().removeLineEndings() shouldBe expectedMultiMessageOutput
   }
 
   @Test
@@ -63,7 +67,10 @@ class HtmlCollectorProcessorShould {
       File("/path/to/nowhere"),
       mutableListOf()
     )
-    processor.process("Lorem Ipsum") shouldBeFailure OmegaError("'/path/to/nowhere' is not accessible")
+    processor.process("Lorem Ipsum") shouldBeFailure { err ->
+      err.shouldBeInstanceOf<OmegaError>()
+      err.reason shouldMatch ".+path.to.nowhere' is not accessible"
+    }
   }
 }
 
@@ -84,7 +91,7 @@ private val expectedSingleMessageOutput = """
   </body>
   </html>
   
-  """.trimIndent()
+  """.trimIndent().removeLineEndings()
 
 private val expectedMultiMessageOutput = """
   <!DOCTYPE html>
@@ -103,4 +110,7 @@ private val expectedMultiMessageOutput = """
   </body>
   </html>
   
-  """.trimIndent()
+  """.trimIndent().removeLineEndings()
+
+private fun String.removeLineEndings(): String =
+  this.replace("\n", "").replace("\r", "")
