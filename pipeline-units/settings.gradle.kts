@@ -5,7 +5,8 @@ include(
   "shared",
   "alpha",
   "beta",
-  "omega"
+  "omega",
+  "sigma"
   )
 
 dependencyResolutionManagement {
