@@ -1,7 +1,8 @@
 package pl.sudneu.pipelineunits.sigma
 
 import org.http4k.core.HttpHandler
-import org.http4k.core.Response
-import org.http4k.core.Status.Companion.CREATED
+import org.http4k.routing.routes
 
-fun SigmaApi(): HttpHandler = { Response(CREATED) }
+fun SigmaApi(messageHandler: MessageHandler): HttpHandler = routes(
+  AcceptMessageRoute(messageHandler)
+)

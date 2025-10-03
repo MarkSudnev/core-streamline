@@ -1,5 +1,6 @@
 package pl.sudneu.pipelineunits.sigma
 
+import dev.forkhandles.result4k.asSuccess
 import io.kotest.matchers.collections.shouldHaveSize
 import org.apache.kafka.clients.producer.MockProducer
 import org.http4k.client.OkHttp
@@ -20,7 +21,7 @@ import org.junit.jupiter.api.Test
 class AcceptanceTest {
 
   private val producer = MockProducer<String, String>()
-  private val service = SigmaApi().asServer(SunHttp(Port.RANDOM.value))
+  private val service = SigmaApi { Unit.asSuccess() }.asServer(SunHttp(Port.RANDOM.value))
   private val client = ClientFilters
     .SetBaseUriFrom(Uri.of("http://localhost:${service.port()}"))
     .then(OkHttp())

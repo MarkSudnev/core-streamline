@@ -8,7 +8,7 @@ dependencies {
   implementation(libs.http4k.bom)
   implementation(libs.http4k.core)
   implementation(libs.http4k.client.okhttp)
-  implementation(libs.bundles.jackson)
+  implementation(libs.http4k.jackson)
   testImplementation(libs.http4k.kotest)
 }
 
