@@ -55,8 +55,6 @@ class AcceptMessageRouteShould {
     response shouldHaveStatus INTERNAL_SERVER_ERROR
     response shouldHaveBody "IllegalStateException: some-error"
   }
-
-
 }
 
 private class DummyMessageHandler: MessageHandler {
@@ -64,8 +62,6 @@ private class DummyMessageHandler: MessageHandler {
   private var _wasCalled = false
   val wasCalled get() = _wasCalled
 
-  override fun handle(message: String): Result<Unit, SigmaError> {
-    _wasCalled = true
-    return Unit.asSuccess()
-  }
+  override fun handle(message: String): Result<Unit, SigmaError> =
+    Unit.asSuccess().also { _wasCalled = true }
 }

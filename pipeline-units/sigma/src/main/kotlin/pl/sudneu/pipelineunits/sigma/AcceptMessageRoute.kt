@@ -15,9 +15,9 @@ private val acceptMessageRequestBodyLens = Body.auto<MessageRequest>().toLens()
 
 fun AcceptMessageRoute(handler: MessageHandler): RoutingHttpHandler =
   "/api/v1/messages" bind POST to { request ->
+    val messageRequest = acceptMessageRequestBodyLens(request)
     handleException {
-      acceptMessageRequestBodyLens(request)
-        .let { body -> handler.handle(body.message) }
+      handler.handle(messageRequest.message)
     }
       .map { Response(CREATED) }
       .recover { err -> Response(INTERNAL_SERVER_ERROR).body(err.reason) }

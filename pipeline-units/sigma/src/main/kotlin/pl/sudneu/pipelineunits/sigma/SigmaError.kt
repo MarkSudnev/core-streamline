@@ -9,8 +9,8 @@ fun <T> handleException(block: (Unit) -> Result<T, SigmaError>): Result<T, Sigma
   return try {
     block(Unit)
   } catch (e: Throwable) {
-    Failure(SigmaError(e.toPurpleMessage()))
+    Failure(SigmaError(e.toSigmaMessage()))
   }
 }
 
-fun Throwable.toPurpleMessage(): String = "${this::class.simpleName}: ${this.message}"
+fun Throwable.toSigmaMessage(): String = "${this::class.simpleName}: ${this.message}"
