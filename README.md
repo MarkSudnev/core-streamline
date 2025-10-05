@@ -43,7 +43,8 @@ It demonstrates how events flow through multiple processing units, intermediate 
 
 
 The message starts with:
-> `[alpha::2025-10-05T18:12:52.268054195][beta::2025-10-05T18:12:52.435450385]`  
+> `[alpha::2025-10-05T18:12:52.268054195][beta::2025-10-05T18:12:52.435450385]`
+
 This prefixes were added by pipeline units.
 
 
