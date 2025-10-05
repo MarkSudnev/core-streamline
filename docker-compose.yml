@@ -79,9 +79,9 @@ services:
       terraform:
         condition: service_completed_successfully
 
-  helper:
+  triggerer:
     image: apache/kafka:3.9.1
-    container_name: helper
+    container_name: triggerer
     depends_on:
       terraform:
         condition: service_completed_successfully
