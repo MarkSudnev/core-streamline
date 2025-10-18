@@ -4,6 +4,7 @@ import dev.forkhandles.result4k.asSuccess
 import io.kotest.matchers.collections.shouldHaveSize
 import org.apache.kafka.clients.producer.MockProducer
 import org.apache.kafka.common.Cluster
+import org.apache.kafka.common.serialization.StringSerializer
 import org.http4k.client.OkHttp
 import org.http4k.config.Port
 import org.http4k.core.Method.POST
@@ -23,10 +24,10 @@ class AcceptanceTest {
 
   private val producer = MockProducer(
     Cluster.empty(),
-    false,
+    true,
     null,
-    org.apache.kafka.common.serialization.StringSerializer(),
-    org.apache.kafka.common.serialization.StringSerializer()
+    StringSerializer(),
+    StringSerializer()
   )
   private val handler = KafkaMessageHandler(producer, "test-topic")
   private val service = SigmaApi(handler).asServer(SunHttp(Port.RANDOM.value))
