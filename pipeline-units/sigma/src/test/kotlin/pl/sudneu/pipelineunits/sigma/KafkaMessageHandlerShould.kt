@@ -15,7 +15,7 @@ class KafkaMessageHandlerShould {
 
   private val producer = MockProducer(
     Cluster.empty(),
-    false,
+    true,
     null,
     org.apache.kafka.common.serialization.StringSerializer(),
     org.apache.kafka.common.serialization.StringSerializer()
